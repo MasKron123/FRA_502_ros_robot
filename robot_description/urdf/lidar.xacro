@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="r_lidar">
+    <xacro:include filename="$(find robot_description)/urdf/properties.xacro"/>
+    <xacro:macro name="lidar_a" params="translation rotation parent ">
+        <link name="lidar">
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+                <mass value="0.1" />
+                <inertia 	
+                    ixx = "0.00123"	ixy = "0.00001"	ixz = "0.00001"
+	                iyx = "0.00001"	iyy = "0.00082"	iyz = "0.00027"
+	                izx = "0.00001"	izy = "0.00027"	izz = "0.00116"/>
+            </inertial>
+            <collision>
+                <!-- lidar collision -->
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <mesh filename="package://robot_description/Mash/lidar_Link.STL" scale="1 1 1"/>
+                </geometry>
+            </collision>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://robot_description/Mash/lidar_Link.STL" scale="1 1 1"/>
+                </geometry>
+            </visual>
+        </link>
+        <joint name="chassis_lidar" type="fixed">
+            <origin xyz="${translation}" rpy="${rotation}" />
+            <parent link="${parent}" />
+            <child link="lidar" />
+        </joint>
+        <!-- hokuyo -->
+        <gazebo reference="lidar">
+            <sensor type="ray" name="head_hokuyo_sensor">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>40</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>${-PI}</min_angle>
+                        <max_angle>${PI}</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.10</min>
+                    <max>5.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <!-- Noise parameters based on published spec for Hokuyo laser
+                    achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+                    stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+                    reading. -->
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+                <topicName>/Putang/laser/scan</topicName>
+                <frameName>lidar</frameName>
+            </plugin>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+    
+</robot>

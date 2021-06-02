@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <xacro:property name="PI" value = "3.1415926535897931"/>
+    <xacro:property name="WHEEL_RADIUS" value = "0.035"/>
+
+    <!--joint properties-->
+    <xacro:property name="U_MAX" value="10.0"/>
+    <xacro:property name="V_MAX" value="20.0"/>
+    <xacro:property name="WHEEL_JOINT_DAMP" value="0.3"/>
+    <xacro:property name="WHEEL_SEPARATION" value="0.135"/>
+    <xacro:property name="RB_WHEEL_R" value="0.070"/>
+    <xacro:property name="length_WHEEL" value="0.030"/>
+    length
+
+</robot>

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="Putang">
+    <xacro:include filename="$(find robot_description)/urdf/properties.xacro"/> 
+    <xacro:include filename="$(find robot_description)/urdf/chassis.xacro"/>
+    <xacro:include filename="$(find robot_description)/urdf/wheel.xacro"/>
+    <xacro:include filename="$(find robot_description)/urdf/caster.xacro"/>
+    <xacro:include filename="$(find robot_description)/urdf/lidar.xacro"/>
+    <xacro:include filename="$(find robot_description)/urdf/camera.xacro"/>
+    <xacro:chassis/>
+    <xacro:wheel 
+        name="left" 
+        translation="${WHEEL_SEPARATION /2} 0 0" 
+        rotation="0 0 ${PI}" 
+        parent="base_link"/>
+    <xacro:wheel 
+        name="right" 
+        translation="${-WHEEL_SEPARATION /2} 0 0" 
+        rotation="0 0 ${PI}" 
+        parent="base_link"/>      
+    <xacro:caster 
+        name="ball" 
+        translation="0 0.121 -0.027" 
+        rotation="0 0 0" 
+        parent="base_link"/>
+    <xacro:lidar_a 
+        translation="0 0 0.080" 
+        rotation="0 0 0" 
+        parent="base_link"/>
+    <xacro:camera_a 
+        translation="0 0.126 0.0305" 
+        rotation="${PI/36} 0 ${PI/2}" 
+        parent="base_link"/>
+    <gazebo>
+        <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+            <robotNamespace>/Putang</robotNamespace>
+            <legacyMode>false</legacyMode>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>50</updateRate>
+            <leftJoint>left_wheel_joint</leftJoint>
+            <rightJoint>right_wheel_joint</rightJoint>
+            <wheelSeparation>${WHEEL_SEPARATION}</wheelSeparation>
+            <wheelDiameter>${RB_WHEEL_R*2}</wheelDiameter>
+            <torque>10</torque>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_footprint</robotBaseFrame>
+            <publishWheelTF>false </publishWheelTF>
+            <publishOdomTF>true</publishOdomTF>
+            <publishWheelJointState>false</publishWheelJointState>
+        </plugin>
+    </gazebo>
+</robot>
